@@ -1,6 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+String result = "";
+var labelColor = Colors.red, resultColor;
+List<int> ratings = [];
+double rating = 1;
+int i = 0, total = 0;
+
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Home(),
@@ -11,12 +17,6 @@ class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
-
-String result = "";
-var resultColor = Colors.red, labelColor = Colors.red;
-List<int> ratings = [];
-double rating = 1;
-int i = 0, total = 0;
 
 class _HomeState extends State<Home> {
   List<String> questionsList = [
@@ -38,53 +38,56 @@ class _HomeState extends State<Home> {
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(
             questionsList.elementAt(i),
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(fontSize: 24, color: Colors.blue),
             textAlign: TextAlign.center,
           ),
           SizedBox(
-            width: 0,
             height: 20,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "${rating.toInt()}",
-                style: TextStyle(fontSize: 24),
+              Container(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  "${rating.toInt()}",
+                  style: TextStyle(fontSize: 24),
+                ),
               ),
-              Slider.adaptive(
-                  value: rating,
-                  min: 1,
-                  max: 5,
-                  divisions: 4,
-                  activeColor: labelColor,
-                  label: "${rating.toInt()}",
-                  onChanged: (newRating) {
-                    setState(() {
-                      rating = newRating;
-                      switch (rating.toInt()) {
-                        case 1:
-                          labelColor = Colors.red;
-                          break;
-                        case 2:
-                          labelColor = Colors.orange;
-                          break;
-                        case 3:
-                          labelColor = Colors.amber;
-                          break;
-                        case 4:
-                          labelColor = Colors.lightGreen;
-                          break;
-                        case 5:
-                          labelColor = Colors.green;
-                          break;
-                      }
-                    });
-                  }),
+              Expanded(
+                child: Slider.adaptive(
+                    value: rating,
+                    min: 1,
+                    max: 5,
+                    divisions: 4,
+                    activeColor: labelColor,
+                    label: "${rating.toInt()}",
+                    onChanged: (newRating) {
+                      setState(() {
+                        rating = newRating;
+                        switch (rating.toInt()) {
+                          case 1:
+                            labelColor = Colors.red;
+                            break;
+                          case 2:
+                            labelColor = Colors.orange;
+                            break;
+                          case 3:
+                            labelColor = Colors.amber;
+                            break;
+                          case 4:
+                            labelColor = Colors.lightGreen;
+                            break;
+                          case 5:
+                            labelColor = Colors.green;
+                            break;
+                        }
+                      });
+                    }),
+              ),
             ],
           ),
           SizedBox(
-            width: 0,
             height: 20,
           ),
           ElevatedButton(
@@ -97,10 +100,11 @@ class _HomeState extends State<Home> {
                   total += rating.toInt();
                   rating = 1;
                 } else {
-                  if (total < 10) {
+                  total += rating.toInt();
+                  if (total < 11) {
                     result = "We are sorry for your inconvenience";
                     resultColor = Colors.red;
-                  } else if (total < 20) {
+                  } else if (total < 21) {
                     result = "Hope we serve you better next time";
                     resultColor = Colors.amber;
                   } else {
@@ -111,6 +115,7 @@ class _HomeState extends State<Home> {
                   setState(() {
                     i = 0;
                     rating = 1;
+                    total = 0;
                     labelColor = Colors.red;
                     ratings.removeRange(0, 5);
                   });
@@ -130,12 +135,7 @@ class ResultPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Thank you!"),
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: SizedBox(width: 0),
       ),
       body: Center(
         child: Column(
@@ -148,7 +148,7 @@ class ResultPage extends StatelessWidget {
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
             ),
-            SizedBox(width: 0, height: 20),
+            SizedBox(height: 20),
             InkWell(
               child: Text(
                 "Restart",
