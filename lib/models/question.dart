@@ -1,7 +1,7 @@
 class Question {
   String question;
   int rating;
-  Question(this.question, {this.rating = 0});
+  Question(this.question, {this.rating = 1});
 }
 
 List<Question> questions = [
